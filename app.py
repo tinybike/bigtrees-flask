@@ -7,10 +7,10 @@ from __future__ import division
 import os
 from flask import Flask, request, render_template
 
-port = int(os.environ.get('PORT', 5000))
+port = int(os.environ.get("PORT", 5000))
 
 app = Flask(__name__)
-app.debug = True
+app.debug = "DYNO" not in os.environ
 app.config["datafile"] = "TP001_jenkins.csv"
 
 @app.route("/", methods=["GET", "POST"])
