@@ -11,7 +11,7 @@ port = int(os.environ.get("PORT", 5000))
 
 app = Flask(__name__)
 app.debug = "DYNO" not in os.environ
-app.config["datafile"] = "TP001_jenkins.csv"
+app.config["datafile"] = os.path.join("app", "data", "TP001_jenkins.csv")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
