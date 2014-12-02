@@ -4,10 +4,13 @@ bigtrees web app
 
 """
 from __future__ import division
+import os
 from flask import Flask, request, render_template
 
+port = int(os.environ.get("PORT", 5000))
+
 app = Flask(__name__)
-app.debug = True
+app.debug = "DYNO" not in os.environ
 app.config["datafile"] = "TP001_jenkins.csv"
 
 @app.route("/", methods=["GET", "POST"])
@@ -45,9 +48,9 @@ def index():
 
 def main():
     if app.debug:
-        app.run()
+        app.run(port=port)
     else:
-        app.run(host="0.0.0.0", port=7000)
+        app.run(host="0.0.0.0")
 
 if __name__ == "__main__":
     main()
