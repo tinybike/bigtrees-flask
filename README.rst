@@ -1,98 +1,53 @@
-bigtrees
-========
+bigtrees-flask
+--------------
 
-.. image:: https://travis-ci.org/dataRonin/bigtrees.svg?branch=master
-    :target: https://travis-ci.org/dataRonin/bigtrees
+.. image:: https://travis-ci.org/tensorjack/bigtrees-flask.svg?branch=master
+    :target: https://travis-ci.org/tensorjack/bigtrees-flask
 
-The bigtrees/ source contains Python functions for computing biomass for
-trees > 150 cm in the long-term research plots. Of approximately 1.3
-million unique instances of trees, those larger than 150 cm diameter
-number roughly 3300. However, their biomass is a significant component
-of the plots on which they are located and many equations are badly
-calibrated for this range. The bigtrees/ tools are a starting point for
-us to iterate through these large diameter trees and find the best
-equations in our databases (TV00908, Gody/Lutz/Acker papers, Jenkins,
-maybe others?)
+.. image:: https://coveralls.io/repos/tensorjack/bigtrees-flask/badge.png
+  :target: https://coveralls.io/r/tensorjack/bigtrees-flask
 
-Currently, bigtrees/ is implemented in python 2.7.8 on Mac OS X
-Mavericks.
+Minimal "read from a csv in response to a user request, then show them the results" example web app, created using `Flask <http://flask.pocoo.org/>`__.
 
-Using Pip or Conda, you must install the packages csv, math, decimal,
-numpy, os, itertools, and pymssql to run bigtrees. If you wish to use
-the plotting functions (not in the "run script") also install
-MatPlotLib. If you cannot install these, or need a different bridge to
-the MS SQL server, please edit the preamble to comment out or change the
-modules you do not have.
+Installation
+~~~~~~~~~~~~
+
+First, clone this repository onto your computer by entering the following command into the terminal:
 
 ::
 
-        import csv
-        import math
-        import decimal 
-        import matplotlib as plt
-        import numpy as np
-        import os
-        import itertools
-        import pymssql
+    $ git clone https://github.com/tensorjack/bigtrees-flask
 
-If you use itertools in Python 3 be aware that some of the functionality
-may not be the same as in 2.7.8. This toolkit does not attempt to be
-forward compatible. But if you want to make it so, send me a pull
-request!
+Once it is downloaded, go into the ``bigtrees-flask`` directory and install the app's dependencies (by convention, these are listed in a ``requirements.txt`` file):
+
+::
+
+    $ cd bigtrees-flask
+    $ pip install -r requirements.txt
+
+The second command installs the dependencies required by bigtrees-flask to run -- in this case, just Flask itself.  Note: if you are not using a virtual environment, you may need to prepend ``sudo`` to the second command.
 
 Usage
------
+~~~~~
 
-download the bigtrees source code and place it in a directory of your
-choosing run at terminal as
+To run the web app on your localhost, go into the ``bigtrees-flask`` directory, and type:
+
+::
+   
+    $ python app.py
+
+Open up your web browser and go to ``http://127.0.0.1:5000``.  Voila!
+
+Tests
+~~~~~
+
+To illustrate how you can test a web app, I sketched out a few simple unit tests.  They're in the ``/tests`` directory.  To run these:
 
 ::
 
-        python biggest_trees.py
+    $ pip install -r test_requirements.txt
+    $ py.test tests/test_app.py --doctest-modules -v --cov app --cov-report term-missing
 
-It should complete in almost "no time".
+The cov and cov-report flags in the ``py.test`` command tells py.test to generate a coverage report -- that is, a report that tells you what lines in ``app.py`` are not covered by the unit tests.  (Ideally, you want coverage to be at 100%.  However, for web apps, there is often some "boilerplate" code that is not run during tests, such as the lines in the ``if __name__ == "__main__"`` block.)
 
-References
-----------
-
-Bigtreesource.csv contains a list of the equations used. This is easier
-than reading them out of the code. A source list will be provided later
-(soon, I hope!)
-
-Output
-------
-
-In the writeoutput(cursor) function, you have the ability to change the
-name of the output file. At the moment it is "bigtrees\_tp001\_v3.csv".
-The name of this file has no effect on the program's running.
-
-Quality Level Descriptions
---------------------------
-
-Big Tree Biomass Generators These functions require an input of DBH,
-species, and stand id. To obtain some test data, visit:
-http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=Tp001
-
-Notes: \* x is dbh, in cm \* "big trees" is any trees with cm dbh > 150
-cm. \* equation priority: First select the best notch in Tier 1, then \*
-select the best notch in Tier 2. Record as T1.1.T2.3, for example.
-
-Tier 1: 1. same species, same dbh range, same geo-region 2. same
-species, same dbh range, different geo-region 3. different species, same
-dbh range, same geo-region 4. same species, different dbh range, same
-geo-region 5. different species, same dbh range, different geo-region 6.
-same species, different dbh range, different geo-region 7. different
-species, different dbh range, different geo-region
-
-Tier 2: 1. same equations used by gody and documented by gody and acker
-2. uses a volume -> biomass conversion based on density in harmon's
-studies (i.e. TV009, TV010, etc.) for conifers 3. directly calculates
-total aboveground biomass 3a. directly calculates total aboveground
-biomass but uses a height calculation that may or may not have a
-reference to that species 4. sums tree components to get to total
-aboveground biomass \* note that 3 is prefered to 4 because in some
-cases parts, such as dead branches, may not be explicitly included when
-maybe they should 5. calcuates biomass from volume, but we do not have a
-density and must approximate with a proxy 6. calculates biomass from
-volume for stem only, and we don't have a density, and must use a proxy
-In the case of 4, 5 or 6, revisit Tier 1 and possibly step down a notch.
+Test results will appear in your terminal.  If you want to access the coverage report later, it is stored in a file called ``.coverage`` (in the same directory).
