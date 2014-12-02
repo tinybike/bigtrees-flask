@@ -48,9 +48,9 @@ def index():
 
 def main():
     if app.debug:
-        app.run()
+        app.run(port=port)
     else:
-        app.run(host="0.0.0.0", port=port)
+        app.run(host="0.0.0.0")
 
 if __name__ == "__main__":
     main()
